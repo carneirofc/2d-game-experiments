@@ -10,7 +10,7 @@ void animatorUpdate(World& w, const AnimationBank& bank, float dt);
 
 // Switch an entity to a new animation, resetting playback. No-op if already
 // playing that animation (so it doesn't stutter when held).
-void playAnim(World& w, EntityId e, int animId);
+void playAnim(World& w, EntityIndex e, int animId);
 
 // Step a single AnimState forward (shared by runtime + SpriteEditor preview).
 void stepAnim(AnimState& st, const AnimationDef& def, float dt);

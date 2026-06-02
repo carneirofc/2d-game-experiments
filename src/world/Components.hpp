@@ -12,6 +12,13 @@ enum EntityFlags : std::uint32_t {
     FLAG_FLIP_X  = 1u << 3, // draw mirrored horizontally
 };
 
+// Per-entity controller intent: what the controller wants this step, decoupled
+// from hardware. Written by Input (keyboard/AI/network), consumed by control.
+struct Intent {
+    float moveX = 0.0f;   // -1..+1 desired horizontal direction
+    bool  jump  = false;  // jump requested this step (edge-triggered upstream)
+};
+
 // Per-entity animation playback state. POD, lives in SoA arrays.
 struct AnimState {
     std::uint16_t animId   = 0; // index into AnimationBank's flat table

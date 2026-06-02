@@ -16,8 +16,13 @@ struct PlayerConfig {
     float jumpSpeed = 520.0f; // px/s initial upward
 };
 
-// Reads keyboard, drives FLAG_PLAYER entities: horizontal move, jump (only
-// when grounded), facing flip, and animation state selection.
-void inputUpdate(World& w, const PlayerConfig& cfg, const PlayerAnims& anims);
+// Hardware -> Intent. Reads keyboard, writes intent[] for FLAG_PLAYER entities.
+// No gameplay knowledge — could be swapped for AI/network without touching
+// controlUpdate.
+void inputUpdate(World& w);
+
+// Intent -> effects. Consumes intent[] for FLAG_PLAYER entities: horizontal
+// velocity, jump (only when grounded), facing flip, and animation selection.
+void controlUpdate(World& w, const PlayerConfig& cfg, const PlayerAnims& anims);
 
 } // namespace sc

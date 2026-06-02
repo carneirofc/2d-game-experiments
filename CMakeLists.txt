@@ -70,6 +70,14 @@ add_executable(${PROJECT_NAME} ${GAME_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib imgui rlimgui nlohmann_json::nlohmann_json)
 
+# In-game debug UI (ImGui HUD + sprite editor). Off => the debug pass is compiled
+# out via #ifdef SC_ENABLE_DEBUG. (Fully stripping ImGui from the binary also
+# needs an explicit non-GLOB source list excluding src/debug/* — deferred.)
+option(SC_ENABLE_DEBUG "Build in-game debug UI (ImGui HUD + sprite editor)" ON)
+if(SC_ENABLE_DEBUG)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE SC_ENABLE_DEBUG)
+endif()
+
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4)
 else()

@@ -30,12 +30,17 @@ void debugHud(DebugState& dbg, World& w, Physics& phys, PlayerConfig& player) {
     ImGui::SliderFloat("jump speed", &player.jumpSpeed, 0.0f, 1200.0f);
 
     ImGui::SeparatorText("Inspector");
-    int id = (dbg.inspected == INVALID_ENTITY) ? -1 : static_cast<int>(dbg.inspected);
+    int id = (dbg.inspected.index == INVALID_INDEX) ? -1 : static_cast<int>(dbg.inspected.index);
     if (ImGui::InputInt("entity id", &id)) {
-        dbg.inspected = (id < 0) ? INVALID_ENTITY : static_cast<EntityId>(id);
+        // Bind to whatever currently occupies that slot (a fresh handle), so the
+        // generation check below catches a slot that is later recycled.
+        if (id < 0 || !worldAliveIndex(w, static_cast<EntityIndex>(id)))
+            dbg.inspected = INVALID_ENTITY;
+        else
+            dbg.inspected = worldHandle(w, static_cast<EntityIndex>(id));
     }
-    if (dbg.inspected != INVALID_ENTITY && worldAlive(w, dbg.inspected)) {
-        EntityId e = dbg.inspected;
+    EntityIndex e = worldResolve(w, dbg.inspected);
+    if (e != INVALID_INDEX) {
         ImGui::Text("pos (%.1f, %.1f)", w.pos[e].x, w.pos[e].y);
         ImGui::Text("vel (%.1f, %.1f)", w.vel[e].x, w.vel[e].y);
         ImGui::Text("anim id %u  frame %u%s", w.anim[e].animId, w.anim[e].frameIdx,

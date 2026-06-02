@@ -12,7 +12,7 @@ struct DebugState {
     int   spawnRequest    = 0;     // entities the HUD wants spawned this frame
     int   despawnRequest  = 0;
     int   drawnLastFrame  = 0;
-    EntityId inspected    = INVALID_ENTITY;
+    Entity inspected      = INVALID_ENTITY;
 };
 
 // Renders the main debug HUD: FPS/frame-time, entity counts, spawn/despawn

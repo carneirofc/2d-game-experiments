@@ -1,16 +1,32 @@
 #pragma once
+#include <raylib.h>   // Vector2, Rectangle, Color, ...
 #include <cstdint>
 #include <limits>
 
 namespace sc {
 
-// Plain 2D float pair. No methods, no operators — just data.
-struct Vec2 {
-    float x = 0.0f;
-    float y = 0.0f;
+// Use raylib's own math/geometry types directly (Vector2, Rectangle, Color).
+//
+// Two notions of identity:
+//   EntityIndex — raw slot into the SoA arrays. Used for hot iteration; never
+//                 stored across frames (a recycled slot reuses the index).
+//   Entity      — a stable handle (index + generation). Stored wherever a
+//                 reference must outlive a frame (player, inspector, AI target).
+//                 worldResolve() validates the generation before use, so a
+//                 stale handle to a recycled slot resolves to INVALID_INDEX.
+using EntityIndex = std::uint32_t;
+using Generation  = std::uint32_t;
+
+inline constexpr EntityIndex INVALID_INDEX = std::numeric_limits<EntityIndex>::max();
+
+struct Entity {
+    EntityIndex index = INVALID_INDEX;
+    Generation  gen   = 0;
 };
 
-using EntityId = std::uint32_t;
-inline constexpr EntityId INVALID_ENTITY = std::numeric_limits<EntityId>::max();
+inline constexpr Entity INVALID_ENTITY{INVALID_INDEX, 0};
+
+inline bool operator==(Entity a, Entity b) { return a.index == b.index && a.gen == b.gen; }
+inline bool operator!=(Entity a, Entity b) { return !(a == b); }
 
 } // namespace sc

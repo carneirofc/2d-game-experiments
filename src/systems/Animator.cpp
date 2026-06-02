@@ -24,17 +24,16 @@ void stepAnim(AnimState& st, const AnimationDef& def, float dt) {
 }
 
 void animatorUpdate(World& w, const AnimationBank& bank, float dt) {
-    const std::size_t n = worldCapacity(w);
-    for (std::size_t e = 0; e < n; ++e) {
-        if (!(w.flags[e] & FLAG_ACTIVE)) continue;
+    for (std::size_t k = 0; k < w.aliveCount; ++k) {
+        const EntityIndex e = w.dense[k];
         AnimState& st = w.anim[e];
         if (!bankValid(bank, st.animId)) continue;
         stepAnim(st, bank.defs[st.animId], dt);
     }
 }
 
-void playAnim(World& w, EntityId e, int animId) {
-    if (!worldAlive(w, e) || animId < 0) return;
+void playAnim(World& w, EntityIndex e, int animId) {
+    if (!worldAliveIndex(w, e) || animId < 0) return;
     AnimState& st = w.anim[e];
     if (st.animId == animId) return; // already playing
     st.animId   = static_cast<std::uint16_t>(animId);

@@ -25,11 +25,10 @@ int renderEntities(const World& w,
     const float bottom = cam.target.y + halfH + margin;
 
     int drawn = 0;
-    const std::size_t n = worldCapacity(w);
-    for (std::size_t e = 0; e < n; ++e) {
-        if (!(w.flags[e] & FLAG_ACTIVE)) continue;
-        const Vec2 p = w.pos[e];
-        const Vec2 s = w.size[e];
+    for (std::size_t k = 0; k < w.aliveCount; ++k) {
+        const EntityIndex e = w.dense[k];
+        const Vector2 p = w.pos[e];
+        const Vector2 s = w.size[e];
         if (p.x + s.x < left || p.x > right || p.y + s.y < top || p.y > bottom)
             continue; // culled
 
