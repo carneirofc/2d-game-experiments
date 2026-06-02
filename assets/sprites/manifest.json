@@ -1,0 +1,10 @@
+{
+  "assetDir": "assets/sprites",
+  "sheets": [
+    { "name": "player", "json": "assets/sprites/player.json", "generateIfMissing": true }
+  ],
+  "roles": {
+    "player": { "idle": "player:idle", "run": "player:run", "jump": "player:jump" },
+    "crowd":  { "idle": "player:idle" }
+  }
+}
